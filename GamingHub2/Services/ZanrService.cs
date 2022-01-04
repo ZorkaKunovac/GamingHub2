@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GamingHub2.Services
@@ -39,6 +40,40 @@ namespace GamingHub2.Services
 
             return _mapper.Map<List<Model.Zanr>>(list);
         }
+
+        public override Model.Zanr Insert(ZanrUpsertRequest request)
+        {
+            var entity = _mapper.Map<Database.Zanr>(request);
+
+            AddZanr(entity);
+
+            return _mapper.Map<Model.Zanr>(entity);
+        }
+
+        public void AddZanr(Database.Zanr entity)
+        {
+            if (string.IsNullOrWhiteSpace(entity.Naziv))
+            {
+                throw new ArgumentException("Invalid parameter ", "Naziv");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Naziv, @"^[A-za-z \t]{3,40}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Naziv");
+
+                }
+            }
+            if ((entity.Opis.Length >= 500))
+            {
+                throw new ArgumentException("Max. number of characters ", "Opis");
+            }
+
+            Context.Set<Database.Zanr>().Add(entity);
+            Context.SaveChanges();
+
+        }
+
 
 
 
