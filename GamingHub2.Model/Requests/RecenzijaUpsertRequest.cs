@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace GamingHub2.Model.Requests
     public class RecenzijaUpsertRequest
     {
         public int KorisnikId { get; set; }
+        [DisplayName("Igra")]
         public int IgraId { get; set; }
 
         [Required(ErrorMessage = "Obavezno polje")]

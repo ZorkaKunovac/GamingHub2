@@ -10,12 +10,12 @@ using Xunit;
 
 namespace GamingHub2UnitTest
 {
-    public class TestAddingNewZanr
+    public class TestAddingNewKonzola
     {
         public static ApplicationDbContext _context;
         private static IMapper _mapper;
 
-        public TestAddingNewZanr()
+        public TestAddingNewKonzola()
         {
 
             if (_mapper == null)
@@ -30,80 +30,78 @@ namespace GamingHub2UnitTest
         }
 
 
+
         [Theory]
-        [InlineData("Zanr", "Opis")]
-        [InlineData("Zanr", "")]
-        public void AddZanr_EmptyField_ShouldWork(string naziv, string opis)
+        [InlineData("Konzola", "Detalji")]
+        [InlineData("Konzola", "")]
+        public void AddKonzola_EmptyField_ShouldWork(string naziv, string detalji)
         {
-            ZanrUpsertRequest request = new ZanrUpsertRequest()
+            KonzolaUpsertRequest request = new KonzolaUpsertRequest()
             {
                 Naziv = naziv,
-                Opis = opis
+                Detalji=detalji
             };
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "ZanrContext1")
+            .UseInMemoryDatabase(databaseName: "KonzolaContext1")
             .Options;
 
             using (_context = new ApplicationDbContext(options))
             {
-                ZanrService _service = new ZanrService(_context, _mapper);
+                KonzolaService _service = new KonzolaService(_context, _mapper);
                 //assert & act
-                var validZanr = _service.Insert(request);
-                Assert.NotNull(validZanr);
-            }
-        }
-
-        [Theory]
-        [InlineData("", "Opis", "Naziv")]
-        public void AddZanr_EmptyField_ShouldFail(string naziv, string opis, string param)
-        {
-            ZanrUpsertRequest request = new ZanrUpsertRequest()
-            {
-                Naziv = naziv,
-                Opis = opis
-            };
-
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "ZanrContext2")
-            .Options;
-
-            using (_context = new ApplicationDbContext(options))
-            {
-                ZanrService _service = new ZanrService(_context, _mapper);
-                //assert & act
-                Assert.Throws<ArgumentException>(param, () => _service.Insert(request));
-
+                var validKonzola = _service.Insert(request);
+                Assert.NotNull(validKonzola);
             }
         }
 
 
         [Theory]
-        //   [InlineData("Zanr", "Opis")]
-        [InlineData("Z", "opis", "Naziv")]
-        [InlineData("Za", "", "Naziv")]
-        [InlineData("NazivZanraPrekoDozvoljenogBrojaKarakteraa", "", "Naziv")]
-
-        public void AddZanr_Format_ShouldFail(string naziv, string opis, string param)
+        [InlineData("", "Detalji", "Naziv")]
+        public void AddKonzola_EmptyField_ShouldFail(string naziv, string detalji, string param)
         {
-            ZanrUpsertRequest request = new ZanrUpsertRequest()
+            KonzolaUpsertRequest request = new KonzolaUpsertRequest()
             {
                 Naziv = naziv,
-                Opis = opis
+                Detalji = detalji
             };
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "ZanrContext3")
+            .UseInMemoryDatabase(databaseName: "KonzolaContext2")
             .Options;
 
             using (_context = new ApplicationDbContext(options))
             {
-                ZanrService _service = new ZanrService(_context, _mapper);
+                KonzolaService _service = new KonzolaService(_context, _mapper);
                 //assert & act
                 Assert.Throws<ArgumentException>(param, () => _service.Insert(request));
+
             }
         }
 
+
+        [Theory]
+        [InlineData("K", "Opis", "Naziv")]
+        [InlineData("NazivKonzolePrekoDozvoljenogBrojaKaraktera", "", "Naziv")]
+
+        public void AddKonzola_Format_ShouldFail(string naziv, string detalji, string param)
+        {
+            KonzolaUpsertRequest request = new KonzolaUpsertRequest()
+            {
+                Naziv = naziv,
+                Detalji = detalji
+            };
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(databaseName: "KonzolaContext3")
+            .Options;
+            using (_context = new ApplicationDbContext(options))
+            {
+                KonzolaService _service = new KonzolaService(_context, _mapper);
+                //assert & act
+                Assert.Throws<ArgumentException>(param, () => _service.Insert(request));
+            }
+        }
 
     }
 }
