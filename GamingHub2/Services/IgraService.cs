@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GamingHub2.Filters;
+using System.Text.RegularExpressions;
 
 namespace GamingHub2.Services
 {
@@ -45,7 +46,8 @@ namespace GamingHub2.Services
             var set = Context.Set<Database.Igra>();
             var entity = _mapper.Map<Database.Igra>(request);
 
-            set.Add(entity);
+            //set.Add(entity);
+            AddIgra(entity);
             Context.SaveChanges();
 
             foreach (var konzola in request.Konzole)
@@ -71,6 +73,52 @@ namespace GamingHub2.Services
             Context.SaveChanges();
             return _mapper.Map<Model.Igra>(entity);
         }
+
+        public void AddIgra(Database.Igra entity)
+        {
+            if (string.IsNullOrWhiteSpace(entity.Naziv))
+            {
+                throw new ArgumentException("Invalid parameter ", "Naziv");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Naziv, @"^[\w \t:]{5,50}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Naziv");
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(entity.Developer))
+            {
+                throw new ArgumentException("Invalid parameter ", "Developer");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Developer, @"^[\w \t:.]{3,50}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Developer");
+                }
+            }
+
+
+            if (string.IsNullOrWhiteSpace(entity.Izdavac))
+            {
+                throw new ArgumentException("Invalid parameter ", "Izdavac");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Izdavac, @"^[\w \t:.]{3,50}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Izdavac");
+                }
+            }
+
+
+            Context.Set<Database.Igra>().Add(entity);
+            Context.SaveChanges();
+        }
+
+
 
         public override Model.Igra Update(int id, IgraUpsertRequest request)
         {
