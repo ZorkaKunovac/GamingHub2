@@ -5,6 +5,7 @@ using GamingHub2.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using Xunit;
 
@@ -30,7 +31,6 @@ namespace GamingHub2UnitTest
         }
 
         [Theory]
-        //   [InlineData("Half-Life VR", "Developer", "Izdavac", "2012-11-1", new byte[] { 0 })]
         [InlineData("Grand Theft Auto VI", "Rockstar Games", "Rockstar Games", null, null)]
         [InlineData("Witcher 4", "Rockstar Games", "Rockstar Games", null, new byte[] { 0 })]
         public void AddIgra_EmptyField_ShouldWork(string naziv, string developer, string izdavac, DateTime? datumizlaska, byte[] slika)
