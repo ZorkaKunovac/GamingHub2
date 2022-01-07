@@ -13,6 +13,7 @@ using GamingHub2.Filters;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace GamingHub2.Services
 {
@@ -108,10 +109,12 @@ namespace GamingHub2.Services
         {
             var entity = _mapper.Map<Database.Korisnik>(request);
 
-            if (request.Password != request.PasswordPotvrda)
-            {
-                throw new Exception("Passwordi se ne slažu");
-            }
+            //if (request.Password != request.PasswordPotvrda)
+            //{
+            //    throw new Exception("Passwordi se ne slažu");
+            //}
+
+            PasswordProvjera(request);
 
             Korisnik user = _context.Korisnik.FirstOrDefault(u => u.KorisnickoIme == request.KorisnickoIme);
             Korisnik emil = _context.Korisnik.FirstOrDefault(u => u.Email == request.Email);
@@ -125,8 +128,9 @@ namespace GamingHub2.Services
             entity.LozinkaSalt = GenerateSalt();
             entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, request.Password);
 
-            _context.Korisnik.Add(entity);
-            _context.SaveChanges();
+            //_context.Korisnik.Add(entity);
+            //_context.SaveChanges();
+            AddKorisnik(entity);
 
             foreach (var uloga in request.Uloge)
             {
@@ -142,6 +146,87 @@ namespace GamingHub2.Services
 
             return _mapper.Map<Model.Korisnici>(entity);
         }
+
+
+        public void AddKorisnik(Database.Korisnik entity)
+        {
+            if (string.IsNullOrWhiteSpace(entity.Ime))
+            {
+                throw new ArgumentException("Invalid parameter ", "Ime");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Ime, @"^[A-Z][A-Za-z \t-]{2,50}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Ime");
+
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(entity.Prezime))
+            {
+                throw new ArgumentException("Invalid parameter ", "Prezime");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Prezime, @"^[A-Z][A-Za-z \t-]{2,50}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Prezime");
+
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(entity.Email))
+            {
+                throw new ArgumentException("Invalid parameter ", "Email");
+            }
+            else
+            {
+                if (!Regex.IsMatch(entity.Email, @"^[a-z]+[-+.'\w]+@[a-z]+\.[-.\w]+$", RegexOptions.IgnoreCase))
+                {
+                    throw new ArgumentException("Invalid format ", "Email");
+                }
+            }
+
+            if (!Regex.IsMatch(entity.Telefon, @"^[+]?\d{3}[ ]?\d{2}[ ]?\d{3}[ ]?\d{3,4}$"))
+            {
+                throw new ArgumentException("Invalid format ", "Telefon");
+
+            }
+
+            if (string.IsNullOrWhiteSpace(entity.KorisnickoIme))
+            {
+                throw new ArgumentException("Invalid parameter ", "KorisnickoIme");
+            }
+
+            _context.Set<Database.Korisnik>().Add(entity);
+            _context.SaveChanges();
+        }
+
+        private void PasswordProvjera(KorisniciUpsertRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Password))
+            {
+                throw new ArgumentException("Invalid parameter ", "Password");
+            }
+            else
+            {
+                //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
+                if (!Regex.IsMatch(request.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&+-=()_/|^]{8,}$"))
+                {
+                    throw new ArgumentException("Invalid format ", "Password");
+                }
+            }
+            if (string.IsNullOrWhiteSpace(request.PasswordPotvrda))
+            {
+                throw new ArgumentException("Invalid parameter ", "PasswordPotvrda");
+            }
+            if (request.Password != request.PasswordPotvrda)
+            {
+                throw new ArgumentException("Passwordi se ne slažu ", "PasswordPotvrda");
+            }
+        }
+
 
         [AllowAnonymous]
         public Model.Korisnici Registracija(KorisniciRegistracijaRequest request)
@@ -172,6 +257,7 @@ namespace GamingHub2.Services
 
             _context.Korisnik.Add(entity);
             _context.SaveChanges();
+            //AddKorisnik(entity);
 
             return _mapper.Map<Model.Korisnici>(entity);
         }
