@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace GamingHub2.Services
@@ -57,5 +58,41 @@ namespace GamingHub2.Services
             return mappedEntity;
         }
 
+        public override Model.Proizvod Insert(ProizvodInsertRequest request)
+        {
+            var entity = _mapper.Map<Database.Proizvod>(request);
+
+            AddProizvod(entity);
+
+            return _mapper.Map<Model.Proizvod>(entity);
+        }
+
+        public void AddProizvod(Database.Proizvod entity)
+        {
+            if (string.IsNullOrEmpty(entity.ProdajnaCijena.ToString()))
+            {
+                throw new ArgumentException("Invalid parameter ", "ProdajnaCijena");
+            }
+            else if (entity.ProdajnaCijena < 0)
+            {
+                throw new ArgumentException("Invalid format ", "ProdajnaCijena");
+            }
+            if (!string.IsNullOrWhiteSpace(entity.Popust.ToString()) && entity.Popust < 0)
+            {
+                throw new ArgumentException("Invalid format ", "Popust");
+            }
+            if (string.IsNullOrWhiteSpace(entity.Status.ToString()))
+            {
+                throw new ArgumentException("Invalid parameter ", "Status");
+            }
+
+            if (entity.IgraKonzolaID == 0)
+            {
+                throw new ArgumentException("Invalid format ", "IgraKonzolaID");
+            }
+
+            Context.Set<Database.Proizvod>().Add(entity);
+            Context.SaveChanges();
+        }
     }
 }

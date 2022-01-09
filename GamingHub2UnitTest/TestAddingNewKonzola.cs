@@ -75,7 +75,6 @@ namespace GamingHub2UnitTest
                 KonzolaService _service = new KonzolaService(_context, _mapper);
                 //assert & act
                 Assert.Throws<ArgumentException>(param, () => _service.Insert(request));
-
             }
         }
 

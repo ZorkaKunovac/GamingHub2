@@ -192,7 +192,7 @@ namespace GamingHub2.Services
                 }
             }
 
-            if (!Regex.IsMatch(entity.Telefon, @"^[+]?\d{3}[ ]?\d{2}[ ]?\d{3}[ ]?\d{3,4}$"))
+            if (!string.IsNullOrWhiteSpace(entity.Telefon) && !Regex.IsMatch(entity.Telefon, @"^[+]?\d{3}[ ]?\d{2}[ ]?\d{3}[ ]?\d{3,4}$"))
             {
                 throw new ArgumentException("Invalid format ", "Telefon");
 

@@ -33,7 +33,7 @@ namespace GamingHub2UnitTest
 
 
         [Theory]
-        [InlineData("Zorka", "Kunovac", "zorka.kunovac1@hotmail.com", "+38761000111", "ZorkaKunovac1", "Mostar2022!", "Mostar2022!", new byte[] { 0 })]
+        [InlineData("Zorka", "Kunovac", "zorka.kunovac1@hotmail.com", "", "ZorkaKunovac1", "Mostar2022!", "Mostar2022!", new byte[] { 0 })]
         public void AddKorisnik_EmptyField_ShouldWork(string ime, string prezime, string email, string telefon, string korisnickoime, string password, string passwordpotvrda, byte[] slika)
         {
             KorisniciUpsertRequest request = new KorisniciUpsertRequest()
@@ -65,7 +65,6 @@ namespace GamingHub2UnitTest
         [InlineData("", "Kunovac", "zorka.kunovac@hotmail.com", "+38761000111", "ZorkaKunovac", "Mostar2022!", "Mostar2022!", new byte[] { 0 }, "Ime")]
         [InlineData("Zorka", "", "zorka.kunovac2@hotmail.com", "+38761000111", "ZorkaKunovac2", "Mostar2022!", "Mostar2022!", new byte[] { 0 }, "Prezime")]
         [InlineData("Zorka", "Kunovac", "", "+38761000111", "ZorkaKunovac3", "Mostar2022!", "Mostar2022!", new byte[] { 0 }, "Email")]
-        [InlineData("Zorka", "Kunovac", "zorka.kunovac3@hotmail.com", "", "ZorkaKunovac4", "Mostar2022!", "Mostar2022!", new byte[] { 0 }, "Telefon")]
         [InlineData("Zorka", "Kunovac", "zorka.kunovac4@hotmail.com", "+38761000111", "", "Mostar2022!", "Mostar2022!", new byte[] { 0 }, "KorisnickoIme")]
         [InlineData("Zorka", "Kunovac", "zorka.kunovac5@hotmail.com", "+38761000111", "ZorkaKunovac5", "", "Mostar2022!", new byte[] { 0 }, "Password")]
         [InlineData("Zorka", "Kunovac", "zorka.kunovac6@hotmail.com", "+38761000111", "ZorkaKunovac6", "Mostar2022!", "", new byte[] { 0 }, "PasswordPotvrda")]
