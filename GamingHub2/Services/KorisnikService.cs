@@ -36,6 +36,8 @@ namespace GamingHub2.Services
 
             if (entity == null)
             {
+                throw new ArgumentException("Pogrešan username ili password");
+
                 throw new UserException("Pogrešan username ili password");
             }
 
@@ -43,6 +45,8 @@ namespace GamingHub2.Services
 
             if (hash != entity.LozinkaHash)
             {
+                throw new ArgumentException("Pogrešan username ili password");
+
                 throw new UserException("Pogrešan username ili password");
             }
 
