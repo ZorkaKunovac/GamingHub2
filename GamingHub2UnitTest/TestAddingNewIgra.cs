@@ -14,8 +14,8 @@ namespace GamingHub2UnitTest
     public class TestAddingNewIgra
     {
         public static ApplicationDbContext _context;
-        private static IMapper _mapper;
-
+        private static IMapper _mapper;        
+        
         public TestAddingNewIgra()
         {
 
@@ -31,16 +31,16 @@ namespace GamingHub2UnitTest
         }
 
         [Theory]
-        [InlineData("Grand Theft Auto VI", "Rockstar Games", "Rockstar Games", null, null)]
-        [InlineData("Witcher 4", "Rockstar Games", "Rockstar Games", null, new byte[] { 0 })]
-        public void AddIgra_EmptyField_ShouldWork(string naziv, string developer, string izdavac, DateTime? datumizlaska, byte[] slika)
+        [InlineData("Grand Theft Auto VI", "Rockstar Games", "Rockstar Games", "2017-3-1", null)]
+        [InlineData("Witcher 4", "Rockstar Games", "Rockstar Games", "2020-3-1", new byte[] { 0 })]
+        public void AddIgra_EmptyField_ShouldWork(string naziv, string developer, string izdavac, string datumizlaska, byte[] slika)
         {
             IgraUpsertRequest request = new IgraUpsertRequest()
             {
                 Naziv = naziv,
                 Developer = developer,
                 Izdavac = izdavac,
-                DatumIzlaska = datumizlaska,
+                DatumIzlaska = DateTime.Parse(datumizlaska),
                 SlikaLink = slika
             };
 
@@ -56,20 +56,20 @@ namespace GamingHub2UnitTest
                 Assert.NotNull(validIgra);
             }
         }
-
+ 
         [Theory]
-        [InlineData("", "Developer", "Izdavac", null, null, "Naziv")]
-        [InlineData("NazivIgre", "", "Izdavac", null, null, "Developer")]
-        [InlineData("NazivIgre", "Developer", "", null, null, "Izdavac")]
+        [InlineData("", "Developer", "Izdavac", "2020-4-1", null, "Naziv")]
+        [InlineData("NazivIgre", "", "Izdavac", "2020-5-1", null, "Developer")]
+        [InlineData("NazivIgre", "Developer", "", "2020-6-1", null, "Izdavac")]
 
-        public void AddIgra_EmptyField_ShouldFail(string naziv, string developer, string izdavac, DateTime? datumizlaska, byte[] slika, string param)
+        public void AddIgra_EmptyField_ShouldFail(string naziv, string developer, string izdavac, string datumizlaska, byte[] slika, string param)
         {
             IgraUpsertRequest request = new IgraUpsertRequest()
             {
                 Naziv = naziv,
                 Developer = developer,
                 Izdavac = izdavac,
-                DatumIzlaska = datumizlaska,
+                DatumIzlaska = DateTime.Parse(datumizlaska),
                 SlikaLink = slika
             };
 
