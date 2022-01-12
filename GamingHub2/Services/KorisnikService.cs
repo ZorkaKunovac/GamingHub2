@@ -117,7 +117,6 @@ namespace GamingHub2.Services
             //}
 
             PasswordProvjera(request.Password, request.PasswordPotvrda);
-           // PasswordProvjera(request);
 
             Korisnik user = _context.Korisnik.FirstOrDefault(u => u.KorisnickoIme == request.KorisnickoIme);
             Korisnik email = _context.Korisnik.FirstOrDefault(u => u.Email == request.Email);
@@ -209,30 +208,6 @@ namespace GamingHub2.Services
             _context.Set<Database.Korisnik>().Add(entity);
             _context.SaveChanges();
         }
-
-        //private void PasswordProvjera(KorisniciUpsertRequest request)
-        //{
-        //    if (string.IsNullOrWhiteSpace(request.Password))
-        //    {
-        //        throw new ArgumentException("Invalid parameter ", "Password");
-        //    }
-        //    else
-        //    {
-        //        //Minimum eight characters, at least one uppercase letter, one lowercase letter and one number
-        //        if (!Regex.IsMatch(request.Password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&+-=()_/|^]{8,}$"))
-        //        {
-        //            throw new ArgumentException("Invalid format ", "Password");
-        //        }
-        //    }
-        //    if (string.IsNullOrWhiteSpace(request.PasswordPotvrda))
-        //    {
-        //        throw new ArgumentException("Invalid parameter ", "PasswordPotvrda");
-        //    }
-        //    if (request.Password != request.PasswordPotvrda)
-        //    {
-        //        throw new ArgumentException("Passwordi se ne slažu ", "PasswordPotvrda");
-        //    }
-        //}
 
         private void PasswordProvjera(string password, string passwordPotvrda)
         {
@@ -379,5 +354,4 @@ namespace GamingHub2.Services
             TrenutniKorisnik = korisnik;
         }
     }
-
 }
