@@ -35,7 +35,7 @@ docker exec -it gaminghub2-master_gaminghub2-sql_1 /opt/mssql-tools/bin/sqlcmd -
 
 #### Role: Administrator
 * Username: Administrator
-* Password: test
+* Password: test12345
 * Applications: Desktop, Mobile
 
 ### Role: Moderator
